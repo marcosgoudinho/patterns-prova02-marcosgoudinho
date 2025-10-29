@@ -1,21 +1,42 @@
-import { LegacyPaymentSystem, ModernPaymentAPI, PaymentProcessor } from './problemAdapter.js';
-
-class ModernPaymentAdapter {
-  constructor(modernAPI) {
-    this.modernAPI = modernAPI;
+class LegacyPaymentSystem {
+    makePayment(amount) {
+      console.log(`Pagando R$${amount} com sistema legado.`);
+    }
   }
-
-  makePayment(amount) {
-    const amountInCents = amount * 100;
-    this.modernAPI.process(amountInCents);
+  
+  class ModernPaymentAPI {
+    process(amountInCents) {
+      console.log(`Pagamento de R$${amountInCents / 100} via API moderna.`);
+    }
   }
-}
-
-const legacySystem = new LegacyPaymentSystem();
-const legacyProcessor = new PaymentProcessor(legacySystem);
-legacyProcessor.pay(100); 
-
-const modernAPI = new ModernPaymentAPI();
-const adaptedSystem = new ModernPaymentAdapter(modernAPI);
-const modernProcessor = new PaymentProcessor(adaptedSystem);
-modernProcessor.pay(150); 
+  
+  class ModernPaymentAdapter {
+    constructor(modernAPI) {
+      this.modernAPI = modernAPI;
+    }
+  
+    makePayment(amount) {
+      const amountInCents = amount * 100;
+      this.modernAPI.process(amountInCents);
+    }
+  }
+  
+  class PaymentProcessor {
+    constructor(system) {
+      this.system = system;
+    }
+  
+    pay(amount) {
+      this.system.makePayment(amount);
+    }
+  }
+  
+  const legacy = new LegacyPaymentSystem();
+  const processorLegacy = new PaymentProcessor(legacy);
+  processorLegacy.pay(100);
+  
+  const modernAPI = new ModernPaymentAPI();
+  const adapter = new ModernPaymentAdapter(modernAPI);
+  const processorModern = new PaymentProcessor(adapter);
+  processorModern.pay(250);
+  

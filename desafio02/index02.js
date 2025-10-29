@@ -1,36 +1,52 @@
-import { TV } from './problemBridge.js';
-
-class RemoteControl {
-  constructor(device) {
-    this.device = device;
+// Implementação (Implementor)
+class Device {
+    turnOn() {}
+    turnOff() {}
   }
-
-  pressPowerButton(on) {
-    if (on) this.device.turnOn();
-    else this.device.turnOff();
+  
+  // Implementação concreta (ConcreteImplementor)
+  class TV extends Device {
+    turnOn() {
+      console.log("TV ligada.");
+    }
+  
+    turnOff() {
+      console.log("TV desligada.");
+    }
   }
-}
-
-class TVDevice extends TV {}
-
-class Radio {
-  turnOn() {
-    console.log("Rádio ligado.");
+  
+  // Outra possível implementação (para mostrar a flexibilidade)
+  class Radio extends Device {
+    turnOn() {
+      console.log("Rádio ligado.");
+    }
+  
+    turnOff() {
+      console.log("Rádio desligado.");
+    }
   }
-
-  turnOff() {
-    console.log("Rádio desligado.");
+  
+  // Abstração (Abstraction)
+  class RemoteControl {
+    constructor(device) {
+      this.device = device;
+    }
+  
+    pressPowerButton(on) {
+      if (on) this.device.turnOn();
+      else this.device.turnOff();
+    }
   }
-}
-
-const tv = new TVDevice();
-const radio = new Radio();
-
-const tvRemote = new RemoteControl(tv);
-const radioRemote = new RemoteControl(radio);
-
-tvRemote.pressPowerButton(true);   
-tvRemote.pressPowerButton(false);  
-
-radioRemote.pressPowerButton(true);   
-radioRemote.pressPowerButton(false);
+  
+  // Uso
+  
+  const tv = new TV();
+  const remoteTV = new RemoteControl(tv);
+  remoteTV.pressPowerButton(true);
+  remoteTV.pressPowerButton(false);
+  
+  const radio = new Radio();
+  const remoteRadio = new RemoteControl(radio);
+  remoteRadio.pressPowerButton(true);
+  remoteRadio.pressPowerButton(false);
+  
